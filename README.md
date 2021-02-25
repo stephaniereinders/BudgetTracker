@@ -2,7 +2,7 @@
 The BudgetTracker allows you to keep track of your account balance and how much you spend on different budget categories. The budget categories are Housing, Food, Car, Clothing, Entertainment, and Other.
 
 ### Functionality
-- When you create a new BudgetTracker, tell it the starting balance of the account. The starting balance will then be allocated to the different budget categories.
+- Specificy the starting balance when you create a new BudgetTracker. The starting balance will then be allocated to the different budget categories.
 - View the current balance of the account and the balances of each budget category.
 - Keep track of withdrawals from the account and assign each withdrawal to a budget category.
 - Keep track of deposits to the account and allocate the deposited amount across the budget categories.
@@ -27,12 +27,26 @@ budget.show_balance()
 
     TOTAL BALANCE: $1,259.30
     -------------------------
-    housing balance: $377.79
-    food balance: $251.86
-    car balance: $314.82
-    clothing balance: $125.93
+    housing balance: $314.82
+    insurance balance: $125.93
+    food balance: $125.93
+    transportation balance: $125.93
+    utilities balance: $125.93
+    savings balance: $125.93
     entertainment balance: $125.93
-    other balance: $62.97
+    clothing balance: $62.97
+    miscellaneous balance: $125.93
+
+
+
+```python
+budget.show_balance_barchart()
+```
+
+
+    
+![png](plots/balance_barchart1.png)
+    
 
 
 ## Budget Allocations
@@ -45,7 +59,7 @@ budget.show_allocations_pie_chart()
 
 
     
-![png](output_6_0.png)
+![png](plots/allocations_piechart.png)
     
 
 
@@ -72,17 +86,13 @@ When you spend money, you can log the expense as a withdrawal from your account 
 
 ```python
 budget.withdraw(withdrawal_date = '2020-01-08', withdrawal_category='food', withdrawal_amount=35.23)
-budget.show_balance()
+budget.show_balance_barchart()
 ```
 
-    TOTAL BALANCE: $1,224.07
-    -------------------------
-    housing balance: $377.79
-    food balance: $216.63
-    car balance: $314.82
-    clothing balance: $125.93
-    entertainment balance: $125.93
-    other balance: $62.97
+
+    
+![png](plots/balance_barchart2.png)
+    
 
 
 
@@ -106,17 +116,13 @@ Make a deposit to the account with acct.deposit(). Enter the deposit date and am
 
 ```python
 budget.deposit(deposit_date = '2020-01-09', deposit_amount=100.00)
-budget.show_balance()
+budget.show_balance_barchart()
 ```
 
-    TOTAL BALANCE: $1,324.07
-    -------------------------
-    housing balance: $407.79
-    food balance: $236.63
-    car balance: $339.82
-    clothing balance: $135.93
-    entertainment balance: $135.93
-    other balance: $67.97
+
+    
+![png](plots/balance_barchart3.png)
+    
 
 
 
@@ -137,9 +143,8 @@ budget.show_check_register()
 
 
 ## Future Functionality
-- Incorporate testing
+- Incorporate testing.
 - Start a BudgetTracker from a current check register.
 - The current version requires that dates be in the ISO standard format: 'YYYY-MM-DD.' Add functionality to allow users to enter dates in other formats. E.g. '10-05-20', '10/05/20', 'Aug. 10, 20'.
-- Allow users to change the default budget category allocation amount.
-- Allow users to transfer money from one budget category to another.
+- Allow users to change the default budget category allocation amounts.
 - Create graphs of spending by budget category and month.

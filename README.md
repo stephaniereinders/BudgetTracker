@@ -49,7 +49,7 @@ budget.show_balance_barchart()
     
 
 
-## Budget Allocations
+## Budget allocations
 We can view a pie chart that shows how the balance is assigned to budget categories.
 
 
@@ -142,7 +142,7 @@ budget.show_check_register()
     0          1324.07  
 
 
-## Future Functionality
+## Future functionality
 - Incorporate testing.
 - Start a BudgetTracker from a current check register.
 - The current version requires that dates be in the ISO standard format: 'YYYY-MM-DD.' Add functionality to allow users to enter dates in other formats. E.g. '10-05-20', '10/05/20', 'Aug. 10, 20'.

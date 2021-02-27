@@ -1,13 +1,21 @@
 from datetime import date
 import pandas as pd
 import matplotlib.pyplot as plt
+from os import path
 
 
 class BudgetTracker:
-    def __init__(self, starting_balance, start_date):
+    def __init__(self, starting_balance, start_date, transactions_notebook_name):
+        """Create a new BudgetTracker. Enter the account's starting balance. The balance can be $0. The start date
+        should be formatted as 'YYYY-MM-DD'. Choose the name you would like to use for the transaction notebook. The
+        notebook will be saved as a csv file under this name."""
+
         self.balance = round(starting_balance, 2)
         self.current_date = date.fromisoformat(start_date)
-        self.check_register = None
+
+        # Start transactions notebook
+        self.transactions_filename = transactions_notebook_name + '.csv'
+        self.transactions = self.start_transactions_notebook()
 
         # Allocate balance to budget categories
         self.category_balances = {'housing': 0,
@@ -98,31 +106,46 @@ class BudgetTracker:
 
         plt.show()
 
-    def start_check_register(self):
-        """Start a check register as a Pandas DataFrame and save as a csv file"""
-        self.check_register = pd.DataFrame(data=[[self.current_date, 'starting balance', 'none', 0, self.balance]],
-                                           columns=['transaction_date', 'transaction_type', 'budget_category',
-                                                    'transaction_amount', 'current_balance'])
-        self.check_register.to_csv('check_register.csv')
+    def start_transactions_notebook(self):
+        """Start a notebook of transactions as a Pandas DataFrame and save as a csv file. If a csv file by that name
+        already exists in the directory, ask the user if they want to overwrite it or choose a different name."""
 
-    def show_check_register(self):
-        """Display the check register."""
-        print("Check register:\n", self.check_register)
+        # If file already exists, let the user overwrite it or choose a new name.
+        if path.exists(self.transactions_filename):
+            if input(f'{self.transactions_filename} already exists. Do you want to use this file as your transactions '
+                     f'notebook? (y/n): ') not in ['y', 'yes', 'Y', 'Yes', 'YES']:
+                self.transactions_filename = input("Choose a new filename. Example 'transactions1.csv': ")
+
+        # Create a DataFrame of the transactions
+        self.transactions = pd.DataFrame(data=[[self.current_date, 'starting balance', 'none', 0, self.balance]],
+                                         columns=['transaction_date', 'transaction_type', 'budget_category',
+                                                  'transaction_amount', 'current_balance'])
+        # Save DataFrame to csv
+        self.transactions.to_csv(self.transactions_filename)
+
+        return self.transactions
+
+    def show_transactions_notebook(self):
+        """Display the transactions notebook."""
+        print("TRANSACTIONS NOTEBOOK:")
+        print("-------------------------")
+        print(self.transactions)
 
     def update_register(self, transaction_date, transaction_type, budget_category, transaction_amount):
-        """Add a new transaction to the check register. The transaction date should be formatted as 'YYYY-MM-DD'."""
+        """Add a new transaction to the transactions notebook. The transaction date should be formatted as
+        'YYYY-MM-DD'."""
         transaction = [{'transaction_date': transaction_date,
                         'transaction_type': transaction_type,
                         'budget_category': budget_category,
                         'transaction_amount': transaction_amount,
                         'current_balance': self.balance}]
-        self.check_register = self.check_register.append(transaction)
-        self.check_register.to_csv('check_register.csv', index=False)
+        self.transactions = self.transactions.append(transaction)
+        self.transactions.to_csv(self.transactions_filename, index=False)
 
     def withdraw(self, withdrawal_date, withdrawal_category, withdrawal_amount):
         """Withdraw money from the account. This subtracts the withdrawal amount from the account balance and the
-        withdrawal budget category balance, and add this transaction to the check register. The deposit date should be
-        formatted as 'YYYY-MM-DD'."""
+        withdrawal budget category balance, and add this transaction to the transactions notebook. The deposit date
+        should be formatted as 'YYYY-MM-DD'."""
         self.balance -= round(withdrawal_amount, 2)
         self.category_balances[withdrawal_category] -= withdrawal_amount
         self.update_register(transaction_date=withdrawal_date,
@@ -132,8 +155,8 @@ class BudgetTracker:
 
     def deposit(self, deposit_date, deposit_amount):
         """Deposit money into the account. This adds the deposit amount to the account balance, allocates the amount
-        across the various budget categories, and adds this transaction to the check register. The deposit date should
-        be formatted as 'YYYY-MM-DD'."""
+        across the various budget categories, and adds this transaction to the transactions notebook. The deposit date
+        should be formatted as 'YYYY-MM-DD'."""
         self.balance += round(deposit_amount, 2)
         self.allocate(amount=deposit_amount)
         self.update_register(transaction_date=deposit_date,

@@ -92,6 +92,10 @@ class BudgetTracker:
         plt.show()
 
     def change_budget(self, budget_dict):
+        """Change the budget categories and allocation amounts. The budget_dict should be a Python dictionary where
+        the keys are the budget category names and the values are the corresponding allocation amounts. The allocation
+        amount should be decimals between 0 and 1 and their sum should equal 1. As an example,
+        budget_dict = {'Housing': 0.5, 'Food': 0.25, 'Clothing': 0.25'} could be your new budget."""
         if round(sum(budget_dict.values()), 2) != 1:
             print("The allocation amounts do not sum to 1. The current total is",
                   round(sum(budget_dict.values()), 2))

@@ -1,7 +1,5 @@
 # BudgetTracker
-The BudgetTracker allows you to keep track of your account balance and how much you spend on different budget categories. The budget categories are Housing, Food, Car, Clothing, Entertainment, and Other.
-
-### Functionality
+The BudgetTracker allows you to keep track of your account balance and how much you spend on different budget categories, like food and clothing.
 - Specificy the starting balance when you create a new BudgetTracker. The starting balance will then be allocated to the different budget categories.
 - View the current balance of the account and the balances of each budget category.
 - Keep track of withdrawals from the account and assign each withdrawal to a budget category.
@@ -17,7 +15,7 @@ The transaction notebook will keep track of all of our deposits and withdrawls. 
 
 ```python
 from helpers import BudgetTracker
-checking = BudgetTracker(starting_balance=1259.30, 
+checking = BudgetTracker(starting_balance=1250.00, 
                        start_date='2020-01-05', 
                        transactions_notebook_name = 'checking')
 ```
@@ -30,17 +28,17 @@ When we start an account, the initial balance is allocated to the budget categor
 checking.show_balance()
 ```
 
-    TOTAL BALANCE: $1,259.30
+    TOTAL BALANCE: $1,250.00
     -------------------------
-    housing balance: $314.82
-    insurance balance: $125.93
-    food balance: $125.93
-    transportation balance: $125.93
-    utilities balance: $125.93
-    savings balance: $125.93
-    entertainment balance: $125.93
-    clothing balance: $62.97
-    miscellaneous balance: $125.93
+    housing balance: $312.50
+    insurance balance: $125.00
+    food balance: $125.00
+    transportation balance: $125.00
+    utilities balance: $125.00
+    savings balance: $125.00
+    entertainment balance: $125.00
+    clothing balance: $62.50
+    miscellaneous balance: $125.00
 
 
 
@@ -50,7 +48,7 @@ checking.show_balance_barchart()
 
 
     
-![png](plots/balances_barchart1.png)
+![png](plots/output_4_0.png)
     
 
 
@@ -64,7 +62,7 @@ checking.show_budget_pie_chart()
 
 
     
-![png](plots/budget_piechart.png)
+![png](plots/output_6_0.png)
     
 
 
@@ -82,7 +80,7 @@ checking.show_transactions_notebook()
     0       2020-01-05  starting balance            none                   0   
     
        current_balance  
-    0           1259.3  
+    0           1250.0  
 
 
 ## Make a withdrawal
@@ -96,7 +94,7 @@ checking.show_balance_barchart()
 
 
     
-![png](plots/balances_barchart2.png)
+![png](plots/output_10_0.png)
     
 
 
@@ -112,8 +110,8 @@ checking.show_transactions_notebook()
     0       2020-01-08        withdrawal            food               35.23   
     
        current_balance  
-    0          1259.30  
-    0          1224.07  
+    0          1250.00  
+    0          1214.77  
 
 
 ## Make a deposit
@@ -127,7 +125,7 @@ checking.show_balance_barchart()
 
 
     
-![png](plots/balances_barchart3.png)
+![png](plots/output_13_0.png)
     
 
 
@@ -144,9 +142,9 @@ checking.show_transactions_notebook()
     0       2020-01-09           deposit             all              100.00   
     
        current_balance  
-    0          1259.30  
-    0          1224.07  
-    0          1324.07  
+    0          1250.00  
+    0          1214.77  
+    0          1314.77  
 
 
 ## Change the budget categories and allocation amounts
@@ -166,7 +164,7 @@ checking.change_budget(budget_dict=new_budget)
 
 
     
-![png](plots/balances_barchart4.png)
+![png](plots/output_16_1.png)
     
 
 

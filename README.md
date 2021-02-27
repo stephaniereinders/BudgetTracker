@@ -22,9 +22,6 @@ checking = BudgetTracker(starting_balance=1259.30,
                        transactions_notebook_name = 'checking')
 ```
 
-    checking.csv already exists. Do you want to use this file as your transactions notebook? (y/n): y
-
-
 ## View the current balance
 When we start an account, the initial balance is allocated to the budget categories as follows: 30% goes into the Housing category, 20% into Food, 25% into Car, 10% into Clothing, 10% into Entertainment, and the remaining amount, roughly 5% goes into the Miscellaneous category. Now that we have an account, we can view the balance.
 
@@ -53,7 +50,7 @@ checking.show_balance_barchart()
 
 
     
-![png](output_4_0.png)
+![png](plots/balances_barchart1.png)
     
 
 
@@ -67,7 +64,7 @@ checking.show_budget_pie_chart()
 
 
     
-![png](output_6_0.png)
+![png](plots/budget_piechart.png)
     
 
 
@@ -99,7 +96,7 @@ checking.show_balance_barchart()
 
 
     
-![png](output_10_0.png)
+![png](plots/balances_barchart2.png)
     
 
 
@@ -130,7 +127,7 @@ checking.show_balance_barchart()
 
 
     
-![png](output_13_0.png)
+![png](plots/balances_barchart3.png)
     
 
 
@@ -169,7 +166,7 @@ checking.change_budget(budget_dict=new_budget)
 
 
     
-![png](output_16_1.png)
+![png](plots/balances_barchart4.png)
     
 
 

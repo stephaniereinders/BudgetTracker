@@ -1,4 +1,0 @@
-transaction_date,transaction_type,budget_category,transaction_amount,current_balance
-2020-01-05,starting balance,none,0.0,1259.3
-2020-01-08,withdrawal,food,35.23,1224.07
-2020-01-09,deposit,all,100.0,1324.07

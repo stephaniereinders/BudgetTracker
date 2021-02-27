@@ -6,23 +6,31 @@ The BudgetTracker allows you to keep track of your account balance and how much 
 - View the current balance of the account and the balances of each budget category.
 - Keep track of withdrawals from the account and assign each withdrawal to a budget category.
 - Keep track of deposits to the account and allocate the deposited amount across the budget categories.
-- Log every withdrawal and deposit in the check register and save the check register to a csv file.
+- Log every withdrawal and deposit in the transactions notebook and save the notebook to a csv file.
+- Track budgets for multiple accounts.
 
 ## Create an new BudgetTracker
-In real life, every time I have set up a new budget, I have started with an account that already has money in it. The BudgetTracker allows you to set the starting balance when you create an account. Let's create a new account with an initial balance of $1,259.30. 
+In real life, every time I have set up a new budget, I have started with an account that already has money in it. The BudgetTracker allows you to set the starting balance when you create an account. Let's create a new account with an initial balance of $1,259.30. We also specify the start date in the format 'YYYY-MM-DD'. 
+
+The transaction notebook will keep track of all of our deposits and withdrawls. When we create a new BudgetTracker, we enter a name for the transactions notebook. The BudgetTracker will check whether a csv file with that name already exists in the project folder. If it does not, the BudgetTracker will create a new transaction notebook under that name and save it to a csv file. If a csv file with that name already exists in the project folder, the BudgetTracker will ask us if we want to use that file as our transactions notebook. If we say no, then we will be given the option to choose a new name and the BudgetTracker will create a new transactions notebook.
 
 
 ```python
 from helpers import BudgetTracker
-budget = BudgetTracker(starting_balance=1259.30, start_date='2020-01-05')
+checking = BudgetTracker(starting_balance=1259.30, 
+                       start_date='2020-01-05', 
+                       transactions_notebook_name = 'checking')
 ```
 
+    checking.csv already exists. Do you want to use this file as your transactions notebook? (y/n): y
+
+
 ## View the current balance
-When we start an account, the initial balance is allocated to the budget categories as follows: 30% goes into the Housing category, 20% into Food, 25% into Car, 10% into Clothing, 10% into Entertainment, and the remaining amount, roughly 5% goes into the Other category. Now that we have an account, we can view the balance.
+When we start an account, the initial balance is allocated to the budget categories as follows: 30% goes into the Housing category, 20% into Food, 25% into Car, 10% into Clothing, 10% into Entertainment, and the remaining amount, roughly 5% goes into the Miscellaneous category. Now that we have an account, we can view the balance.
 
 
 ```python
-budget.show_balance()
+checking.show_balance()
 ```
 
     TOTAL BALANCE: $1,259.30
@@ -40,12 +48,12 @@ budget.show_balance()
 
 
 ```python
-budget.show_balance_barchart()
+checking.show_balance_barchart()
 ```
 
 
     
-![png](plots/balance_barchart1.png)
+![png](output_4_0.png)
     
 
 
@@ -54,26 +62,26 @@ We can view a pie chart that shows how the balance is assigned to budget categor
 
 
 ```python
-budget.show_allocations_pie_chart()
+checking.show_budget_pie_chart()
 ```
 
 
     
-![png](plots/allocations_piechart.png)
+![png](output_6_0.png)
     
 
 
-## Start a check register
-Create a check register that will keep track of all of your transacation. To start with, the register will only list the current balance. Everytime you add a new transaction to the check register, it's contents will be saved in a csv file called "check_register.csv." For those of you familiar with Pandas, the acct.check_register is a Pandas DataFrame. If you aren't familiar with Pandas, don't worry about this.
+## Transactions notebook
+The transactions notebook, checking.transactions, keeps track of all of your transacation. To start with, the notebook will only list the current balance. Everytime you make a deposit or withdrawal the transaction will be recorded in the notebook and the notebook will be saved as a csv file. For those of you familiar with Pandas, checking.transactions is a Pandas DataFrame. If you aren't familiar with Pandas, don't worry about this.
 
 
 ```python
-budget.start_check_register()
-budget.show_check_register()
+checking.show_transactions_notebook()
 ```
 
-    Check register:
-       transaction_date  transaction_type budget_category  transaction_amount  \
+    TRANSACTIONS NOTEBOOK:
+    -------------------------
+      transaction_date  transaction_type budget_category  transaction_amount  \
     0       2020-01-05  starting balance            none                   0   
     
        current_balance  
@@ -81,27 +89,28 @@ budget.show_check_register()
 
 
 ## Make a withdrawal
-When you spend money, you can log the expense as a withdrawal from your account with acct.withraw(). You enter the date of the withdrawal, which budget category you wish to use, and the withdrawal amount. The withdrawal amount will be subtracted from the total balance and the balance of the specified budget category. The transaction will be logged in the check register.
+When you spend money, you can log the expense as a withdrawal from your account with checking.withraw(). You enter the date of the withdrawal, which budget category you wish to use, and the withdrawal amount. The withdrawal amount will be subtracted from the total balance and the balance of the specified budget category. The transaction will be logged in the check register.
 
 
 ```python
-budget.withdraw(withdrawal_date = '2020-01-08', withdrawal_category='food', withdrawal_amount=35.23)
-budget.show_balance_barchart()
+checking.withdraw(withdrawal_date = '2020-01-08', withdrawal_category='food', withdrawal_amount=35.23)
+checking.show_balance_barchart()
 ```
 
 
     
-![png](plots/balance_barchart2.png)
+![png](output_10_0.png)
     
 
 
 
 ```python
-budget.show_check_register()
+checking.show_transactions_notebook()
 ```
 
-    Check register:
-       transaction_date  transaction_type budget_category  transaction_amount  \
+    TRANSACTIONS NOTEBOOK:
+    -------------------------
+      transaction_date  transaction_type budget_category  transaction_amount  \
     0       2020-01-05  starting balance            none                0.00   
     0       2020-01-08        withdrawal            food               35.23   
     
@@ -111,27 +120,28 @@ budget.show_check_register()
 
 
 ## Make a deposit
-Make a deposit to the account with acct.deposit(). Enter the deposit date and amount. The deposit amount will be added to the total balance of the account and divided among the budget categories using acct.allocations.
+Make a deposit to the account with checking.deposit(). Enter the deposit date and amount. The deposit amount will be added to the total balance of the account and divided among the budget categories using checking.allocations.
 
 
 ```python
-budget.deposit(deposit_date = '2020-01-09', deposit_amount=100.00)
-budget.show_balance_barchart()
+checking.deposit(deposit_date = '2020-01-09', deposit_amount=100.00)
+checking.show_balance_barchart()
 ```
 
 
     
-![png](plots/balance_barchart3.png)
+![png](output_13_0.png)
     
 
 
 
 ```python
-budget.show_check_register()
+checking.show_transactions_notebook()
 ```
 
-    Check register:
-       transaction_date  transaction_type budget_category  transaction_amount  \
+    TRANSACTIONS NOTEBOOK:
+    -------------------------
+      transaction_date  transaction_type budget_category  transaction_amount  \
     0       2020-01-05  starting balance            none                0.00   
     0       2020-01-08        withdrawal            food               35.23   
     0       2020-01-09           deposit             all              100.00   
@@ -142,9 +152,28 @@ budget.show_check_register()
     0          1324.07  
 
 
+## Change the budget categories and allocation amounts
+We can change the budget categories and allocation amounts with checking.change_budget() by specifying a new budget as a Python dictionary. The new budget need to meet the following requirements:
+- Each allocation amount needs to be a decimal between 0 and 1. For example, if you want to assign 10% of the balance to housing, the allocation amount would be 0.1
+- All of the allocation amounts need to sum up to 1. 
+
+
+```python
+new_budget = {'Charity': 0.1, 'Housing': 0.38, 'Food': 0.06, 'Transportation': 0.15, 'Insurance': 0.04, 
+              'Debts': 0.05, 'Entertainment': 0.06, 'Clothing': 0.05, 'Savings': 0.05, 'Health': 0.06 }
+checking.change_budget(budget_dict=new_budget)
+```
+
+    The new budget has been set and the current balance has been reallocated to the budget categories accordingly. Here are the new budget category balances:
+
+
+
+    
+![png](output_16_1.png)
+    
+
+
 ## Future functionality
 - Incorporate testing.
-- Start a BudgetTracker from a current check register.
 - The current version requires that dates be in the ISO standard format: 'YYYY-MM-DD.' Add functionality to allow users to enter dates in other formats. E.g. '10-05-20', '10/05/20', 'Aug. 10, 20'.
-- Allow users to change the default budget category allocation amounts.
 - Create graphs of spending by budget category and month.

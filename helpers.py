@@ -27,15 +27,15 @@ class BudgetTracker:
                                   'entertainment': 0,
                                   'clothing': 0,
                                   'miscellaneous': 0}
-        self.allocations = {'housing': 0.25,
-                            'insurance': 0.1,
-                            'food': 0.1,
-                            'transportation': 0.1,
-                            'utilities': 0.1,
-                            'savings': 0.1,
-                            'entertainment': 0.1,
-                            'clothing': 0.05,
-                            'miscellaneous': 0.1}
+        self.budget = {'housing': 0.25,
+                       'insurance': 0.1,
+                       'food': 0.1,
+                       'transportation': 0.1,
+                       'utilities': 0.1,
+                       'savings': 0.1,
+                       'entertainment': 0.1,
+                       'clothing': 0.05,
+                       'miscellaneous': 0.1}
         self.allocate(amount=self.balance)
 
     def show_balance(self):
@@ -65,33 +65,18 @@ class BudgetTracker:
         # Show the category balance to the right of every bar
         bars = ax1.patches
         for bar, value in zip(bars, values):
-            ax1.text(bar.get_width() + 25, bar.get_y() + (bar.get_height()/2),
+            ax1.text(bar.get_width() + 25, bar.get_y() + (bar.get_height() / 2),
                      value, ha='center', va='center')
 
         plt.show()
 
     def allocate(self, amount):
-        """Allocate amount (rounded to the nearest cent) to various budget categories, rounding each amount to a whole
-        number of cents. If rounding causes the sum of the category balances to be greater than the total balance,
-        subtract the difference from the Miscellaneous category and round the Miscellaneous category balance down to
-        the nearest cent."""
-
-        # Add the amount to the Miscellaneous category
-        self.category_balances['miscellaneous'] += round(amount, 2)
-        # For each category except other, add a portion of the amount to the category and subtract that amount from
-        # the Other category.
+        """Allocate the amount (rounded to the nearest cent) to the budget categories."""
         for category in self.category_balances:
-            if category != 'miscellaneous':
-                portion = round(amount * self.allocations[category], 2)
-                self.category_balances[category] += portion
-                self.category_balances['miscellaneous'] -= portion
-        # Adjust the balance of the Other category so that the sum of all category balances is less than or equal to
-        # the total balance.
-        if self.balance < sum(self.category_balances.values()):
-            self.category_balances['miscellaneous'] -= self.balance - sum(self.category_balances.values())
-            self.category_balances['miscellaneous'] = round(self.category_balances['miscellaneous'], 2)
+            portion = round(amount * self.budget[category], 2)
+            self.category_balances[category] += portion
 
-    def show_allocations_pie_chart(self):
+    def show_budget_pie_chart(self):
         """Create a pie chart that shows how money will be allocated to the various budget categories."""
 
         # Create pie chart
@@ -105,6 +90,21 @@ class BudgetTracker:
         ax1.set_title('Budget Category Allocations')
 
         plt.show()
+
+    def change_budget(self, budget_dict):
+        if round(sum(budget_dict.values()), 2) != 1:
+            print("The allocation amounts do not sum to 1. The current total is",
+                  round(sum(budget_dict.values()), 2))
+            return
+        else:
+            self.budget = budget_dict
+            # Update the category names and set the category balances to zero
+            self.category_balances = {key: 0 for key in self.budget}
+            # Allocate the current balance to using the new budget
+            self.allocate(amount=self.balance)
+            print("The new budget has been set and the current balance has been reallocated to the budget categories "
+                  "accordingly. Here are the new budget category balances:")
+            self.show_balance_barchart()
 
     def start_transactions_notebook(self):
         """Start a notebook of transactions as a Pandas DataFrame and save as a csv file. If a csv file by that name

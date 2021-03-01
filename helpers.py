@@ -15,7 +15,7 @@ class BudgetTracker:
 
         # Start transactions notebook
         self.transactions_filename = transactions_notebook_name + '.csv'
-        self.transactions = self.start_transactions_notebook()
+        self.transactions = self.__start_transactions_notebook()
 
         # Allocate balance to budget categories
         self.category_balances = {'housing': 0,
@@ -70,12 +70,6 @@ class BudgetTracker:
 
         plt.show()
 
-    def allocate(self, amount):
-        """Allocate the amount (rounded to the nearest cent) to the budget categories."""
-        for category in self.category_balances:
-            portion = round(amount * self.budget[category], 2)
-            self.category_balances[category] += portion
-
     def show_budget_pie_chart(self):
         """Create a pie chart that shows how money will be allocated to the various budget categories."""
 
@@ -90,6 +84,18 @@ class BudgetTracker:
         ax1.set_title('Budget Category Allocations')
 
         plt.show()
+
+    def show_transactions_notebook(self):
+        """Display the transactions notebook."""
+        print("TRANSACTIONS NOTEBOOK:")
+        print("-------------------------")
+        print(self.transactions)
+
+    def allocate(self, amount):
+        """Allocate the amount (rounded to the nearest cent) to the budget categories."""
+        for category in self.category_balances:
+            portion = round(amount * self.budget[category], 2)
+            self.category_balances[category] += portion
 
     def change_budget(self, budget_dict):
         """Change the budget categories and allocation amounts. The budget_dict should be a Python dictionary where
@@ -110,7 +116,29 @@ class BudgetTracker:
                   "accordingly. Here are the new budget category balances:")
             self.show_balance_barchart()
 
-    def start_transactions_notebook(self):
+    def withdraw(self, withdrawal_date, withdrawal_category, withdrawal_amount):
+        """Withdraw money from the account. This subtracts the withdrawal amount from the account balance and the
+        withdrawal budget category balance, and add this transaction to the transactions notebook. The deposit date
+        should be formatted as 'YYYY-MM-DD'."""
+        self.balance -= round(withdrawal_amount, 2)
+        self.category_balances[withdrawal_category] -= withdrawal_amount
+        self.__update_register(transaction_date=withdrawal_date,
+                               transaction_type='withdrawal',
+                               budget_category=withdrawal_category,
+                               transaction_amount=withdrawal_amount)
+
+    def deposit(self, deposit_date, deposit_amount):
+        """Deposit money into the account. This adds the deposit amount to the account balance, allocates the amount
+        across the various budget categories, and adds this transaction to the transactions notebook. The deposit date
+        should be formatted as 'YYYY-MM-DD'."""
+        self.balance += round(deposit_amount, 2)
+        self.allocate(amount=deposit_amount)
+        self.__update_register(transaction_date=deposit_date,
+                               transaction_type='deposit',
+                               budget_category='all',
+                               transaction_amount=deposit_amount)
+
+    def __start_transactions_notebook(self):
         """Start a notebook of transactions as a Pandas DataFrame and save as a csv file. If a csv file by that name
         already exists in the directory, ask the user if they want to overwrite it or choose a different name."""
 
@@ -129,13 +157,7 @@ class BudgetTracker:
 
         return self.transactions
 
-    def show_transactions_notebook(self):
-        """Display the transactions notebook."""
-        print("TRANSACTIONS NOTEBOOK:")
-        print("-------------------------")
-        print(self.transactions)
-
-    def update_register(self, transaction_date, transaction_type, budget_category, transaction_amount):
+    def __update_register(self, transaction_date, transaction_type, budget_category, transaction_amount):
         """Add a new transaction to the transactions notebook. The transaction date should be formatted as
         'YYYY-MM-DD'."""
         transaction = [{'transaction_date': transaction_date,
@@ -145,25 +167,3 @@ class BudgetTracker:
                         'current_balance': self.balance}]
         self.transactions = self.transactions.append(transaction)
         self.transactions.to_csv(self.transactions_filename, index=False)
-
-    def withdraw(self, withdrawal_date, withdrawal_category, withdrawal_amount):
-        """Withdraw money from the account. This subtracts the withdrawal amount from the account balance and the
-        withdrawal budget category balance, and add this transaction to the transactions notebook. The deposit date
-        should be formatted as 'YYYY-MM-DD'."""
-        self.balance -= round(withdrawal_amount, 2)
-        self.category_balances[withdrawal_category] -= withdrawal_amount
-        self.update_register(transaction_date=withdrawal_date,
-                             transaction_type='withdrawal',
-                             budget_category=withdrawal_category,
-                             transaction_amount=withdrawal_amount)
-
-    def deposit(self, deposit_date, deposit_amount):
-        """Deposit money into the account. This adds the deposit amount to the account balance, allocates the amount
-        across the various budget categories, and adds this transaction to the transactions notebook. The deposit date
-        should be formatted as 'YYYY-MM-DD'."""
-        self.balance += round(deposit_amount, 2)
-        self.allocate(amount=deposit_amount)
-        self.update_register(transaction_date=deposit_date,
-                             transaction_type='deposit',
-                             budget_category='all',
-                             transaction_amount=deposit_amount)
